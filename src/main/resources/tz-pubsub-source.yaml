@@ -1,0 +1,9 @@
+tenant: "public"
+namespace: "default"
+name: "pubsub-source"
+topicName: "persistent://public/default/red_input"
+parallelism: 1
+configs:
+  projectId: "viva-magenta"
+  subscriptionId: "pantone"
+  flowSize: 100

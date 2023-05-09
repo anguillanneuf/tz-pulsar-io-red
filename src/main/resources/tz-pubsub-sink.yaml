@@ -4,5 +4,6 @@ name: "pubsub-sink"
 inputs: ["persistent://public/default/red_output"]
 parallelism: 1
 configs:
-projectId: "viva-magenta"
-topicId: "pantone"
+  projectId: "viva-magenta"
+  topicId: "pantone"
+  batchSize: 10

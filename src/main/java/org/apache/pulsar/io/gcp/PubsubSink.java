@@ -19,11 +19,11 @@ public class PubsubSink implements Sink<GenericObject> {
 
   @Override
   public void open(Map<String, Object> config, SinkContext sinkContext) throws Exception {
-    PubsubConfig pubsubConfig = PubsubConfig.load(config);
-    TopicName topicName = TopicName.of(pubsubConfig.getProjectId(), pubsubConfig.getTopicId());
+    PubsubSinkConfig pubsubSinkConfig = PubsubSinkConfig.load(config);
+    TopicName topicName = TopicName.of(pubsubSinkConfig.getProjectId(), pubsubSinkConfig.getTopicId());
     BatchingSettings batchingSettings =
         BatchingSettings.newBuilder()
-            .setElementCountThreshold(pubsubConfig.getBatchSize())
+            .setElementCountThreshold(pubsubSinkConfig.getBatchSize())
             .build();
     this.publisher = Publisher.newBuilder(topicName).setBatchingSettings(batchingSettings).build();
   }

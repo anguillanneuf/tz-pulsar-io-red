@@ -10,7 +10,7 @@ import org.apache.pulsar.io.core.annotations.FieldDoc;
 
 @Data
 @Accessors(chain = true)
-public class PubsubConfig implements Serializable {
+public class PubsubSinkConfig implements Serializable {
 
   @FieldDoc(required = true, defaultValue = "", help = "Google Cloud project ID")
   private String projectId = "";
@@ -19,10 +19,10 @@ public class PubsubConfig implements Serializable {
   private String topicId = "";
 
   @FieldDoc(required = true, defaultValue = "", help = "Publisher batch size")
-  private Long batchSize = 1L;
+  private Long batchSize = 10L;
 
-  public static PubsubConfig load(Map<String, Object> map) throws IOException {
+  public static PubsubSinkConfig load(Map<String, Object> map) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
-    return mapper.readValue(new ObjectMapper().writeValueAsString(map), PubsubConfig.class);
+    return mapper.readValue(new ObjectMapper().writeValueAsString(map), PubsubSinkConfig.class);
   }
 }

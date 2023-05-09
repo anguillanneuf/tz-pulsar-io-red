@@ -1,4 +1,6 @@
-name: pubsub-sink
-description: Pub/Sub Sink
+name: pubsub-connector
+description: Pub/Sub Sink and Source Connectors
 sinkClass: org.apache.pulsar.io.gcp.PubsubSink
-sinkConfigClass: org.apache.pulsar.io.gcp.PubsubConfig
+sinkConfigClass: org.apache.pulsar.io.gcp.PubsubSinkConfig
+sourceClass: org.apache.pulsar.io.gcp.PubsubSource
+sourceConfigClass: org.apache.pulsar.io.gcp.PubsubSourceConfig
