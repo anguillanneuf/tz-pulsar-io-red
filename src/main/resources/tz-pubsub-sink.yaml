@@ -1,0 +1,8 @@
+tenant: "public"
+namespace: "default"
+name: "pubsub-sink"
+inputs: ["persistent://public/default/red_output"]
+parallelism: 1
+configs:
+projectId: "viva-magenta"
+topicId: "pantone"

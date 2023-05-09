@@ -1,8 +1,6 @@
 package org.apache.pulsar.io.gcp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
@@ -20,20 +18,8 @@ public class PubsubConfig implements Serializable {
   @FieldDoc(required = true, defaultValue = "", help = "Google Cloud Pub/Sub topic ID")
   private String topicId = "";
 
-  public void validate() {
-    if (projectId == null || projectId.equals("")) {
-      throw new IllegalArgumentException("projectId is required");
-    }
-
-    if (topicId == null || topicId.equals("")) {
-      throw new IllegalArgumentException("topicId is required");
-    }
-  }
-
-  public static PubsubConfig load(String yamlFile) throws IOException {
-    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    return mapper.readValue(new File(yamlFile), PubsubConfig.class);
-  }
+  @FieldDoc(required = true, defaultValue = "", help = "Publisher batch size")
+  private Long batchSize = 1L;
 
   public static PubsubConfig load(Map<String, Object> map) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
