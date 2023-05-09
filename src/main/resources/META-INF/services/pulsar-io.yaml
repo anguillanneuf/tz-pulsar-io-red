@@ -1,0 +1,4 @@
+name: pubsub-sink
+description: Pub/Sub Sink
+sinkClass: org.apache.pulsar.io.gcp.PubsubSink
+sinkConfigClass: org.apache.pulsar.io.gcp.PubsubConfig
