@@ -146,4 +146,8 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar.
    $ gcloud pubsub topics delete ${TOPIC_ID}
    ```
 
+## Cloud Build
+
+Set up Cloud Build to run integration tests. Each commit to main triggers a run.
+
 [1]: https://pulsar.apache.org/reference/#/2.11.x/pulsar-admin/sinks?id=localrun

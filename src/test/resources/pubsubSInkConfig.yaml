@@ -1,0 +1,10 @@
+bootstrapServers": "localhost:6650"
+tenant: "public"
+namespace: "default"
+name: "pubsub-sink"
+inputs: ["persistent://public/default/red_output"]
+parallelism: 1
+configs:
+  projectId: "tz-playground-bigdata"
+  topicId: "abc"
+  batchSize: 10

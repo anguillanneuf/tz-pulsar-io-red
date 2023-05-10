@@ -12,24 +12,27 @@ import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.SubscriptionName;
 import com.google.pubsub.v1.TopicName;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Schema;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+@Slf4j
 public class PubsubConnectorTest {
-
-  private static final String PULSAR_TOPIC = "red_output";
+  private static final String PULSAR_TOPIC = "persistent://public/default/test";
   private static final String PULSAR_PRODUCER = "pulsar_producer";
   private static final String SUFFIX = UUID.randomUUID().toString().substring(0, 6);
-  private static final String PROJECT_ID = "pantone";
-  private static final String PUBSUB_RESOURCE_ID = "pantone-" + SUFFIX;
+  private static final String PROJECT_ID = System.getenv("PROJECT_ID");
+  private static final String PUBSUB_RESOURCE_ID = System.getenv("TOPIC_ID");
   private static PulsarClient pulsarClient = null;
   private static Producer<String> pulsarProducer = null;
   private static Subscription subscription = null;
@@ -42,7 +45,17 @@ public class PubsubConnectorTest {
       };
 
   @BeforeClass
-  public static void setUp() throws IOException {
+  public static void setUp() throws PulsarClientException {
+    try (SubscriptionAdminClient subscriptionAdminClient = SubscriptionAdminClient.create()) {
+      TopicName topicName = TopicName.of(PROJECT_ID, PUBSUB_RESOURCE_ID);
+      SubscriptionName subscriptionName = SubscriptionName.of(PROJECT_ID, PUBSUB_RESOURCE_ID+SUFFIX);
+      subscription =
+          subscriptionAdminClient.createSubscription(
+              subscriptionName, topicName, PushConfig.getDefaultInstance(), 10);
+    } catch (IOException e) {
+      log.info("Failed to create subscription.");
+      throw new RuntimeException(e);
+    }
 
     pulsarClient = PulsarClient.builder().serviceUrl("pulsar://localhost:6650").build();
 
@@ -52,18 +65,18 @@ public class PubsubConnectorTest {
             .topic(PULSAR_TOPIC)
             .producerName(PULSAR_PRODUCER)
             .create();
-
-    try (SubscriptionAdminClient subscriptionAdminClient = SubscriptionAdminClient.create()) {
-      TopicName topicName = TopicName.of(PROJECT_ID, PUBSUB_RESOURCE_ID);
-      SubscriptionName subscriptionName = SubscriptionName.of(PROJECT_ID, PUBSUB_RESOURCE_ID);
-      subscription =
-          subscriptionAdminClient.createSubscription(
-              subscriptionName, topicName, PushConfig.getDefaultInstance(), 10);
-    }
   }
 
   @AfterClass
   public static void tearDown() throws PulsarClientException {
+    try (SubscriptionAdminClient subscriptionAdminClient = SubscriptionAdminClient.create()) {
+      SubscriptionName subscriptionName = SubscriptionName.of(PROJECT_ID, PUBSUB_RESOURCE_ID+SUFFIX);
+      subscriptionAdminClient.deleteSubscription(subscriptionName);
+    } catch (IOException e) {
+      log.info("Failed to delete subscription.");
+      throw new RuntimeException(e);
+    }
+
     if (pulsarClient != null) {
       pulsarClient.close();
     }
