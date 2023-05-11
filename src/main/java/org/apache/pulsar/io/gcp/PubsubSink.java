@@ -20,7 +20,8 @@ public class PubsubSink implements Sink<GenericObject> {
   @Override
   public void open(Map<String, Object> config, SinkContext sinkContext) throws Exception {
     PubsubSinkConfig pubsubSinkConfig = PubsubSinkConfig.load(config);
-    TopicName topicName = TopicName.of(pubsubSinkConfig.getProjectId(), pubsubSinkConfig.getTopicId());
+    TopicName topicName =
+        TopicName.of(pubsubSinkConfig.getProjectId(), pubsubSinkConfig.getTopicId());
     BatchingSettings batchingSettings =
         BatchingSettings.newBuilder()
             .setElementCountThreshold(pubsubSinkConfig.getBatchSize())

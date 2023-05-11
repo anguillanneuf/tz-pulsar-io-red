@@ -24,5 +24,4 @@ public class PubsubSourceConfig {
     ObjectMapper mapper = new ObjectMapper();
     return mapper.readValue(new ObjectMapper().writeValueAsString(map), PubsubSourceConfig.class);
   }
-
 }

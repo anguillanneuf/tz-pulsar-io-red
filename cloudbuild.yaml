@@ -1,19 +1,25 @@
 steps:
-- id: 'pulsar-standalone'
-  name: 'maven:3.9-amazoncorretto-17-debian'
+# Uncomment to build a new image using more recent Pulsar version
+#- id: 'pulsar-standalone'
+#  name: gcr.io/cloud-builders/docker
+#  args: [ 'build', '-t', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}', '.' ]
+
+- id: 'run-tests'
+  name: ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}
   script: |
-    #!/usr/bin/env sh
-    apt-get update && apt-get install -yq wget procps
-    wget https://archive.apache.org/dist/pulsar/pulsar-2.11.1/apache-pulsar-2.11.1-bin.tar.gz
-    tar xvfz apache-pulsar-2.11.1-bin.tar.gz
-    cd apache-pulsar-2.11.1
-    bin/pulsar-daemon start standalone
+    #!/usr/bin/env bash
+    /apache-pulsar-2.11.1/bin/pulsar-daemon start standalone
     sleep 20
-    bin/pulsar-admin brokers healthcheck
-    cd /workspace
+    /apache-pulsar-2.11.1/bin/pulsar-admin brokers healthcheck
     mvn test
   env:
     - 'PROJECT_ID=${PROJECT_ID}'
     - 'TOPIC_ID=${_TOPIC_ID}'
 
-
+# Uncomment to build a new image using more recent Pulsar version
+#images:
+#- '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}'
+substitutions:
+  _LOCATION: us-central1
+  _REPOSITORY: pulsar
+  _IMAGE: pulsar-standalone

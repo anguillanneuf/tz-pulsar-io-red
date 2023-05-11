@@ -148,6 +148,12 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar.
 
 ## Cloud Build
 
-Set up Cloud Build to run integration tests. Each commit to main triggers a run.
+Set up [Cloud Build][2] to run integration tests. 
+
+In this repo, each commit to the main branch [triggers][3] a run. [`Dockerfile`](Dockerfile) pulls a Docker image with Maven and Java 17 and install Apache Pulsar. [`cloudbuild.yaml`](cloudbuild.yaml) starts a Pulsar standalone cluster and runs the integration tests.
+
+![img](Screenshot%202023-05-11%20at%203.16.13%20PM.png)
 
 [1]: https://pulsar.apache.org/reference/#/2.11.x/pulsar-admin/sinks?id=localrun
+[2]: https://cloud.google.com/build/docs/automating-builds/github/build-repos-from-github
+[3]: https://cloud.google.com/build/docs/automating-builds/create-manage-triggers
