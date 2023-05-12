@@ -7,3 +7,4 @@ configs:
   projectId: "viva-magenta"
   subscriptionId: "pantone"
   flowSize: 100
+  numStreams: 2

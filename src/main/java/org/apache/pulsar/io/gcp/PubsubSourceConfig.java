@@ -32,7 +32,7 @@ public class PubsubSourceConfig {
   private String subscriptionId = "";
 
   @FieldDoc(required = true, defaultValue = "", help = "Subscriber flow size")
-  private Long flowSize = 10L;
+  private Long flowSize = 100L;
 
   @FieldDoc(required = true, defaultValue = "", help = "Subscriber number of open streams")
   private int numStreams = 1;

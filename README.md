@@ -19,7 +19,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar.
    $ docker ps -a
    $ docker start ${CONTAINTER_ID}
    ```
-4. Prepare the sink config keys and values. Check out [`tz-pubsub-sink.yaml`](src/main/resources/tz-pubsub-sink.yaml).
+4. Prepare the sink config keys and values. Check out [`tz-pubsub-sink.yaml`](src/test/resources/tz-pubsub-sink.yaml).
    ```shell
    $ cat examples/tz-pubsub-sink.yaml 
    tenant: "public"
@@ -63,7 +63,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar.
    $ bin/pulsar-admin sinks delete --tenant public --namespace default --name pubsub-sink
    
    # delete topics
-   $ bin/pulsar-admin topics delete persistent://public/default/${SINK_NAME}
+   $ bin/pulsar-admin topics delete persistent://public/default/${TOPIC_ID}
    
    # stop Docker container
    $ docker stop ${CONTAINER_ID}
@@ -90,7 +90,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar.
    $ docker ps -a
    $ docker start ${CONTAINTER_ID}
    ```
-4. Prepare the source config keys and values. Check out [`tz-pubsub-source.yaml`](src/main/resources/tz-pubsub-source.yaml).
+4. Prepare the source config keys and values. Check out [`tz-pubsub-source.yaml`](src/test/resources/tz-pubsub-source.yaml).
    **Note: Although Pulsar CLI Tools uses `--destination-topic-name` in the source configs, the config YAML file expects `topicName`.**
    ```shell
    $ cat examples/tz-pubsub-source.yaml 
@@ -136,7 +136,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar.
    $ bin/pulsar-admin sources delete --tenant public --namespace default --name pubsub-source
    
    # delete topics
-   $ bin/pulsar-admin sources delete persistent://public/default/${SOURCE_NAME}
+   $ bin/pulsar-admin topics delete persistent://public/default/${TOPIC_ID}
    
    # stop Docker container
    $ docker stop ${CONTAINER_ID}

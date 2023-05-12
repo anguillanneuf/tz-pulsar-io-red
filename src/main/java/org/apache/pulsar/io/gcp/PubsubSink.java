@@ -25,7 +25,6 @@ import org.apache.pulsar.client.api.schema.GenericObject;
 import org.apache.pulsar.functions.api.Record;
 import org.apache.pulsar.io.core.Sink;
 import org.apache.pulsar.io.core.SinkContext;
-import org.apache.pulsar.io.gcp.PubsubSinkConfig;
 
 @Slf4j
 public class PubsubSink implements Sink<GenericObject> {
