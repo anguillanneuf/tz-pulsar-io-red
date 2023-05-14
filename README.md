@@ -1,6 +1,6 @@
 # Apache Pulsar Pub/Sub connector
 
-A simple implementation of Pub/Sub sink and source connector to Apache Pulsar, featured in this [Medium blog post][(https://medium.com/google-cloud/develop-pulsar-connectors-for-pub-sub-7c6cd4499877).
+A simple implementation of Pub/Sub sink and source connector to Apache Pulsar, featured in this [Medium blog post](https://medium.com/google-cloud/develop-pulsar-connectors-for-pub-sub-7c6cd4499877).
 
 ## How to run the sink connector
 
