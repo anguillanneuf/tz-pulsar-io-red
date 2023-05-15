@@ -23,20 +23,17 @@ import com.google.pubsub.v1.ProjectSubscriptionName;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.LinkedBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.functions.api.Record;
-import org.apache.pulsar.io.core.Source;
+import org.apache.pulsar.io.core.PushSource;
 import org.apache.pulsar.io.core.SourceContext;
 
 @Slf4j
-public class PubsubSource implements Source<byte[]> {
+public class PubsubSource extends PushSource<byte[]> {
   private Subscriber subscriber = null;
-  private LinkedBlockingQueue<Record<byte[]>> queue;
 
   @Override
   public void open(Map<String, Object> config, SourceContext sourceContext) throws Exception {
-    queue = new LinkedBlockingQueue<>(1000);
 
     PubsubSourceConfig pubsubSourceConfig = PubsubSourceConfig.load(config);
 
@@ -52,16 +49,16 @@ public class PubsubSource implements Source<byte[]> {
             .build();
 
     Subscriber.Builder subscriberBuilder = Subscriber.newBuilder(projectSubscriptionName,
-        (PubsubMessage message, AckReplyConsumer consumer) -> {
-          Record<byte[]> record = new PubsubRecord(sourceContext.getOutputTopic(), message);
-          try {
-            queue.put(record);
-            consumer.ack();
-          } catch (InterruptedException e) {
-            consumer.nack();
-            throw new RuntimeException(e);
-          }
-        })
+            (PubsubMessage message, AckReplyConsumer consumer) -> {
+              Record<byte[]> record = new PubsubRecord(sourceContext.getOutputTopic(), message);
+              try {
+                consume(record);
+                consumer.ack();
+              } catch (RuntimeException e) {
+                consumer.nack();
+                throw new RuntimeException(e);
+              }
+            })
         .setFlowControlSettings(flowControlSettings)
         .setParallelPullCount(pubsubSourceConfig.getNumStreams())
         .setExecutorProvider(executorProvider);
@@ -69,11 +66,6 @@ public class PubsubSource implements Source<byte[]> {
     subscriber.startAsync().awaitRunning();
     log.info("listening for messages on {}..", subscriber.getSubscriptionNameString());
 
-  }
-
-  @Override
-  public Record<byte[]> read() throws Exception {
-    return this.queue.take();
   }
 
   @Override
@@ -86,32 +78,32 @@ public class PubsubSource implements Source<byte[]> {
   private record PubsubRecord(String pulsarTopic, PubsubMessage pubsubMessage) implements
       Record<byte[]> {
     @Override
-      public Optional<String> getKey() {
-        if (!this.pubsubMessage.getOrderingKey().isEmpty()) {
-          return Optional.of(this.pubsubMessage.getOrderingKey());
-        } else {
-          return Optional.empty();
-        }
-      }
-
-      @Override
-      public byte[] getValue() {
-        return this.pubsubMessage.getData().toByteArray();
-      }
-
-      @Override
-      public Optional<Long> getEventTime() {
-        return Optional.of(this.pubsubMessage.getPublishTime().getSeconds());
-      }
-
-      @Override
-      public Map<String, String> getProperties() {
-        return this.pubsubMessage.getAttributesMap();
-      }
-
-      @Override
-      public Optional<String> getDestinationTopic() {
-        return Optional.of(this.pulsarTopic);
+    public Optional<String> getKey() {
+      if (!this.pubsubMessage.getOrderingKey().isEmpty()) {
+        return Optional.of(this.pubsubMessage.getOrderingKey());
+      } else {
+        return Optional.empty();
       }
     }
+
+    @Override
+    public byte[] getValue() {
+      return this.pubsubMessage.getData().toByteArray();
+    }
+
+    @Override
+    public Optional<Long> getEventTime() {
+      return Optional.of(this.pubsubMessage.getPublishTime().getSeconds());
+    }
+
+    @Override
+    public Map<String, String> getProperties() {
+      return this.pubsubMessage.getAttributesMap();
+    }
+
+    @Override
+    public Optional<String> getDestinationTopic() {
+      return Optional.of(this.pulsarTopic);
+    }
+  }
 }
