@@ -103,6 +103,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar, f
      projectId: "viva-magenta"
      subscriptionId: "pantone"
      flowSize: 100
+     numStreams: 2
    ```
 5. Run a Pulsar IO source connector locally using [Pulsar CLI Tools `localrun`][1].
    ```shell
@@ -154,7 +155,7 @@ This repo uses [Cloud Build][2] to run integration tests. Each new commit to the
 
 ## Run test locally
 
-To run the integration tests locally without pushing to the `main` branch, you need a local Pulsar cluster. You can start one using the Pulsar CLI tools. From there, set the environment variables `PROJECT_ID` and `TOPIC_ID` according to your own Google Cloud project and topic ID. Update [tz-pubsub-sink.yaml](src/test/resources/tz-pubsub-sink.yaml) and [tz-pubsub-source.yaml](src/test/resources/tz-pubsub-source.yaml) according to your own configs as well. Run `mvn clean test -Dtest=org.apache.pulsar.io.gcp.PulsarSinkTest` and `mvn clean test -Dtest=org.apache.pulsar.io.gcp.PulsarSourceTest` to test the sink and source connector seperately. 
+To run the integration tests locally without pushing to the `main` branch, you need a local Pulsar cluster. You can start one using the Pulsar CLI tools. From there, set the environment variables `PROJECT_ID` and `TOPIC_ID` according to your own Google Cloud project and topic ID. Update [tz-pubsub-sink.yaml](src/test/resources/tz-pubsub-sink.yaml) and [tz-pubsub-source.yaml](src/test/resources/tz-pubsub-source.yaml) according to your own configs as well. Run `mvn clean test -Dtest=org.apache.pulsar.io.gcp.PulsarSinkTest` and `mvn clean test -Dtest=org.apache.pulsar.io.gcp.PulsarSourceTest` to test the sink and source connector separately. 
 
 [1]: https://pulsar.apache.org/reference/#/2.11.x/pulsar-admin/sinks?id=localrun
 [2]: https://cloud.google.com/build/docs/automating-builds/github/build-repos-from-github
