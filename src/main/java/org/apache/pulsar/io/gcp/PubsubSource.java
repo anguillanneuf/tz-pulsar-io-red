@@ -50,12 +50,12 @@ public class PubsubSource extends PushSource<byte[]> {
 
     Subscriber.Builder subscriberBuilder = Subscriber.newBuilder(projectSubscriptionName,
             (PubsubMessage message, AckReplyConsumer consumer) -> {
-              Record<byte[]> record = new PubsubRecord(sourceContext.getOutputTopic(), message);
+              Record<byte[]> record = new PubsubRecord(sourceContext.getOutputTopic(), message, consumer);
               try {
                 consume(record);
-                consumer.ack();
+                record.ack();
               } catch (RuntimeException e) {
-                consumer.nack();
+                record.fail();
                 throw new RuntimeException(e);
               }
             })
@@ -75,8 +75,7 @@ public class PubsubSource extends PushSource<byte[]> {
     }
   }
 
-  private record PubsubRecord(String pulsarTopic, PubsubMessage pubsubMessage) implements
-      Record<byte[]> {
+  private record PubsubRecord(String pulsarTopic, PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer) implements Record<byte[]> {
     @Override
     public Optional<String> getKey() {
       if (!this.pubsubMessage.getOrderingKey().isEmpty()) {
@@ -105,5 +104,11 @@ public class PubsubSource extends PushSource<byte[]> {
     public Optional<String> getDestinationTopic() {
       return Optional.of(this.pulsarTopic);
     }
+
+    @Override
+    public void ack(){ ackReplyConsumer.ack(); }
+
+    @Override
+    public void fail() { ackReplyConsumer.nack(); }
   }
 }
