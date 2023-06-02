@@ -49,23 +49,17 @@ public class PubsubSource extends PushSource<byte[]> {
             .build();
 
     Subscriber.Builder subscriberBuilder = Subscriber.newBuilder(projectSubscriptionName,
-            (PubsubMessage message, AckReplyConsumer consumer) -> {
-              Record<byte[]> record = new PubsubRecord(sourceContext.getOutputTopic(), message, consumer);
-              try {
-                consume(record);
-                record.ack();
-              } catch (RuntimeException e) {
-                record.fail();
-                throw new RuntimeException(e);
-              }
-            })
-        .setFlowControlSettings(flowControlSettings)
-        .setParallelPullCount(pubsubSourceConfig.getNumStreams())
-        .setExecutorProvider(executorProvider);
+        (PubsubMessage message, AckReplyConsumer consumer) -> {
+          Record<byte[]> record = new PubsubRecord(sourceContext.getOutputTopic(), message,
+              consumer);
+          consume(record);
+        });
+    subscriberBuilder.setFlowControlSettings(flowControlSettings);
+    subscriberBuilder.setParallelPullCount(pubsubSourceConfig.getNumStreams());
+    subscriberBuilder.setExecutorProvider(executorProvider);
     subscriber = subscriberBuilder.build();
     subscriber.startAsync().awaitRunning();
     log.info("listening for messages on {}..", subscriber.getSubscriptionNameString());
-
   }
 
   @Override
