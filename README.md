@@ -5,7 +5,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar, f
 ## How to run the sink connector
 
 1. Prepare a Pub/Sub topic and subscription. The following examples make use of `projects/viva-magenta/topics/pantone` and `projects/viva-magenta/subscriptions/pantone`. 
-2. Package the Pub/Sub sink connector with `mvn clean package -DskipTest=True`. Obtain `target/tz-pulsar-io-1.0-SNAPSHOT.nar`. Check out the contents with `jar xvf target/tz-pulsar-io-1.0-SNAPSHOT.nar`. Look out for:
+2. Package the Pub/Sub sink connector with `mvn clean package -DskipTest=True`. Obtain `target/tz-pulsar-io-1.1-SNAPSHOT.nar`. Check out the contents with `jar xvf target/tz-pulsar-io-1.1-SNAPSHOT.nar`. Look out for:
    ```text
    org/apache/pulsar/io/gcp/PubsubConfig.class
    org/apache/pulsar/io/gcp/PubsubSink.class
@@ -36,7 +36,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar, f
    ```shell
    $ bin/pulsar-admin sinks localrun \
      --sink-config-file examples/tz-pubsub-sink.yaml  \
-     --archive examples/tz-pulsar-io-1.0-SNAPSHOT.nar
+     --archive examples/tz-pulsar-io-1.1-SNAPSHOT.nar
    
    $ bin/pulsar-admin sinks status --tenant public --namespace default --name pubsub-sink
    
@@ -76,7 +76,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar, f
 ## How to run the source connector
 
 1. Prepare a Pub/Sub topic and subscription. The following examples make use of `projects/viva-magenta/topics/pantone` and `projects/viva-magenta/subscriptions/pantone`.
-2. Package the Pub/Sub source connector with `mvn clean package -DskipTest=True`. Obtain `target/tz-pulsar-io-1.0-SNAPSHOT.nar`. Check out the contents with `jar xvf target/tz-pulsar-io-1.0-SNAPSHOT.nar`. Look out for:
+2. Package the Pub/Sub source connector with `mvn clean package -DskipTest=True`. Obtain `target/tz-pulsar-io-1.1-SNAPSHOT.nar`. Check out the contents with `jar xvf target/tz-pulsar-io-1.1-SNAPSHOT.nar`. Look out for:
    ```text
    org/apache/pulsar/io/gcp/PubsubConfig.class
    org/apache/pulsar/io/gcp/PubsubSource.class
@@ -109,7 +109,7 @@ A simple implementation of Pub/Sub sink and source connector to Apache Pulsar, f
    ```shell
    $ bin/pulsar-admin sources localrun \
      --source-config-file examples/tz-pubsub-source.yaml  \
-     --archive examples/tz-pulsar-io-1.0-SNAPSHOT.nar \
+     --archive examples/tz-pulsar-io-1.1-SNAPSHOT.nar \
      --destination-topic-name red_input
    
    $ bin/pulsar-admin sources status --tenant public --namespace default --name pubsub-source

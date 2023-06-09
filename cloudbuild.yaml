@@ -13,11 +13,11 @@ steps:
     sleep 20
     ${PULSAR_HOME}/bin/pulsar-admin brokers healthcheck
     mvn clean package -DskipTests=true
-    cp target/tz-pulsar-io-1.0-SNAPSHOT.nar ${PULSAR_HOME}/examples/
+    cp target/tz-pulsar-io-1.1-SNAPSHOT.nar ${PULSAR_HOME}/examples/
     cp -r src/test/resources/ ${PULSAR_HOME}/examples/
-    ${PULSAR_HOME}/bin/pulsar-admin sinks localrun --sink-config-file ${PULSAR_HOME}/examples/resources/tz-pubsub-sink.yaml  --archive ${PULSAR_HOME}/examples/tz-pulsar-io-1.0-SNAPSHOT.nar &
+    ${PULSAR_HOME}/bin/pulsar-admin sinks localrun --sink-config-file ${PULSAR_HOME}/examples/resources/tz-pubsub-sink.yaml  --archive ${PULSAR_HOME}/examples/tz-pulsar-io-1.1-SNAPSHOT.nar &
     mvn test -Dtest=org.apache.pulsar.io.gcp.PubsubSinkTest
-    ${PULSAR_HOME}/bin/pulsar-admin sources localrun --source-config-file ${PULSAR_HOME}/examples/resources/tz-pubsub-source.yaml  --archive ${PULSAR_HOME}/examples/tz-pulsar-io-1.0-SNAPSHOT.nar &
+    ${PULSAR_HOME}/bin/pulsar-admin sources localrun --source-config-file ${PULSAR_HOME}/examples/resources/tz-pubsub-source.yaml  --archive ${PULSAR_HOME}/examples/tz-pulsar-io-1.1-SNAPSHOT.nar &
     mvn test -Dtest=org.apache.pulsar.io.gcp.PubsubSourceTest
   env:
     - 'PROJECT_ID=${PROJECT_ID}'
